@@ -45,11 +45,13 @@ def test_proxy(proxy, protocol, url, string_to_find, timeout_ms):
     try:
         proxies = {protocol.lower(): f"{protocol.lower()}://{proxy}"}
         response = requests.get(url, proxies=proxies, timeout=timeout_ms/1000)
+        # Check if the string_to_find is present in the response content
         if string_to_find in response.text:
             return True
-    except requests.exceptions.RequestException:
-        pass
+    except requests.exceptions.RequestException as e:
+        print(f"{Fore.RED}Failed to connect using proxy {proxy}: {e}")
     return False
+
 
 # Function to check if input is a URL
 def is_url(input_string):
@@ -184,3 +186,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
