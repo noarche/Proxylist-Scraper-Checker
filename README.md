@@ -13,9 +13,13 @@ Input a url to scrape and check OR input a path to proxylist you have downloaded
 
 Everything is included to have a great proxylist. The proxys are saved to a textfile after the check is 100% complete. 
 
-For now if the script looks like it has hung up or stopped working press ctrl+c once and it will start working again. 
+# 🪄 Notes 
 
-First release, many more features and mechanics planned for future releases but this version works pretty well so I released it. 
+    For now if the script looks like it has hung up or stopped working press ctrl+c once and it will start working again. 
+
+    First release, many more features and mechanics planned for future releases but this version works pretty well so I released it. 
+
+    The final stable version will have a docker image.
 
 -------------------------------------------------------------------
 
