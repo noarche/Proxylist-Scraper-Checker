@@ -19,11 +19,15 @@ Everything is included to have a great proxylist. The proxys are saved to a text
 
     First release, many more features and mechanics planned for future releases but this version works pretty well so I released it. 
 
-    The final stable version will have a docker image.
+# ꧁꧂ Docker
+
+    `docker pull torquetraction/proxylist:latest`
+
+    `docker run -it torquetraction/proxylist`
 
 -------------------------------------------------------------------
 
-# ꧁꧂ ⭐ Buy me a coffee ☕
+# ꧁꧂  Buy me a coffee ☕
 
 ![qrCode](https://raw.githubusercontent.com/noarche/cd-ripper/main/unrelated-ignore/CryptoQRcodes.png)
 
