@@ -40,18 +40,19 @@ def load_config():
     config.read('config.ini')
     return config['settings']['url'], config['settings']['string_to_find']
 
-# Function to test proxies
+# Function to test proxies with enhanced verification
 def test_proxy(proxy, protocol, url, string_to_find, timeout_ms):
     try:
         proxies = {protocol.lower(): f"{protocol.lower()}://{proxy}"}
-        response = requests.get(url, proxies=proxies, timeout=timeout_ms/1000)
-        # Check if the string_to_find is present in the response content
-        if string_to_find in response.text:
+        response = requests.get(url, proxies=proxies, timeout=timeout_ms / 1000)
+        # Enhanced checks: status code, content type, and string presence
+        if (response.status_code == 200 and 
+            'text/html' in response.headers.get('Content-Type', '') and 
+            string_to_find in response.text):
             return True
     except requests.exceptions.RequestException as e:
         print(f"{Fore.RED}Failed to connect using proxy {proxy}: {e}")
     return False
-
 
 # Function to check if input is a URL
 def is_url(input_string):
@@ -100,16 +101,14 @@ def main():
     proxylist_input = input(f"{Fore.CYAN}Enter path to proxylist or URL: ").strip()
 
     # Protocol selection
-    protocols = [
-        "connect", "http", "https", "socks4", "socks5"
-    ]
+    protocols = ["http", "https", "socks4", "socks5"]
     print(f"{Fore.CYAN}Select protocol to test for:")
     for i, protocol in enumerate(protocols, 1):
         print(f"{Fore.GREEN}{i}. {protocol}")
     
-    protocol_choice = input(f"{Fore.CYAN}Enter choice [default: 4]: ").strip()
-    protocol_choice = int(protocol_choice) if protocol_choice.isdigit() and 1 <= int(protocol_choice) <= len(protocols) else 4
-    protocol = protocols[protocol_choice - 1].split(' ')[0]
+    protocol_choice = input(f"{Fore.CYAN}Enter choice [default: 1]: ").strip()
+    protocol_choice = int(protocol_choice) if protocol_choice.isdigit() and 1 <= int(protocol_choice) <= len(protocols) else 1
+    protocol = protocols[protocol_choice - 1]
 
     # Load proxies from file or URL
     if is_url(proxylist_input):
@@ -124,7 +123,6 @@ def main():
             proxies = [line.strip() for line in file if line.strip()]
 
     proxies = list(set(proxies))  # Remove duplicates
-    proxies = [proxy for proxy in proxies if ':80' not in proxy]  # Filter out port 80
 
     if not proxies:
         print(f"{Fore.RED}No valid proxies found.")
@@ -137,13 +135,10 @@ def main():
     # Function to process each proxy
     def process_proxy(proxy):
         nonlocal bandwidth_used, online_proxies_count
-        # Skip proxies with port 80
-        if ':80' in proxy:
-            return
         if test_proxy(proxy, protocol, url, string_to_find, timeout):
             valid_proxies.append(proxy)
             online_proxies_count += 1
-        bandwidth_used += len(proxy) * len(url)
+        bandwidth_used += len(proxy) * len(url)  # Simplified bandwidth calculation
 
     # Start threads
     threads_list = []
@@ -156,7 +151,7 @@ def main():
         while len(threading.enumerate()) > threads:
             time.sleep(0.1)
         
-        # Update progress bar description
+        # Update progress bar
         progress.set_description(f"Checking proxies - Online: {online_proxies_count}")
         progress.update(1)
 
