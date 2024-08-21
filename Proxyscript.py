@@ -71,8 +71,8 @@ def main():
     url = "https://ziptasticapi.com/82945"
     string_to_find = "SUPERIOR"
     protocol = "socks4"
-    threads = 2
-    timeout = 1500
+    threads = 3
+    timeout = 1200
 
     # Load and clean proxies
     proxies = extract_proxies_from_multiple_urls('linkslist.txt')
@@ -81,7 +81,7 @@ def main():
 
     if not proxies:
         print(f"{Fore.RED}No valid proxies found.")
-        time.sleep(3 * 3600)
+        time.sleep(3600)
         return
 
     valid_proxies = []
