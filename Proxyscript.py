@@ -58,7 +58,7 @@ def remove_checked_proxies(proxies, valid_file, failed_file):
 # Function to process each proxy
 def process_proxy(proxy, protocol, url, string_to_find, timeout, valid_proxies, bandwidth_used):
     if test_proxy(proxy, protocol, url, string_to_find, timeout):
-        with open('Socks4.txt', 'a') as valid_file:
+        with open('Socks5.txt', 'a') as valid_file:
             valid_file.write(f"{proxy}\n")
         valid_proxies.append(proxy)
     else:
@@ -70,18 +70,18 @@ def process_proxy(proxy, protocol, url, string_to_find, timeout, valid_proxies, 
 def main():
     url = "https://ziptasticapi.com/82945"
     string_to_find = "SUPERIOR"
-    protocol = "socks4"
-    threads = 3
+    protocol = "socks5"
+    threads = 2
     timeout = 1200
 
     # Load and clean proxies
     proxies = extract_proxies_from_multiple_urls('linkslist.txt')
     proxies = list(set(proxies))  # Remove duplicates
-    proxies = remove_checked_proxies(proxies, 'Socks4.txt', 'failed-proxylist.txt')
+    proxies = remove_checked_proxies(proxies, 'Socks5.txt', 'failed-proxylist.txt')
 
     if not proxies:
         print(f"{Fore.RED}No valid proxies found.")
-        time.sleep(3600)
+        time.sleep(3 * 3600)
         return
 
     valid_proxies = []
@@ -106,3 +106,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
