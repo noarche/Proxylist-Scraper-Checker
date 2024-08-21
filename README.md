@@ -24,7 +24,7 @@ Everything is included to have a great proxylist. The proxys are saved to a text
 
 This is a secondary script that is fully automated to update the proxylist called socks4.txt and scrape/check proxies every 20 min. It uses Socks4.txt and another file created named failed-proxylist.txt and does not check those proxies again after first run. By default the timeout is 1200ms, 3 threads, socks4 protocol. You can change these settings in the code if you wish but they are very good as is although it may seem a little slow on the first pass.  
 
-This script was also updated to use a better threading tecnique that I need to implement on the regular checker, so it is much much faster when using more than 1 thread.
+This script was also updated to use a better threading tecnique that I need to implement on the regular checker, so it is much much faster when using more than 1 thread.  Overall I prefer using this version of the script.
 
 # ꧁꧂ Docker
 
