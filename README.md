@@ -21,9 +21,9 @@ Everything is included to have a great proxylist. The proxys are saved to a text
 
 # ꧁꧂ Docker
 
-    `docker pull torquetraction/proxylist:latest`
+    docker pull torquetraction/proxylist:latest
 
-    `docker run -it torquetraction/proxylist`
+    docker run -it torquetraction/proxylist
 
 -------------------------------------------------------------------
 
