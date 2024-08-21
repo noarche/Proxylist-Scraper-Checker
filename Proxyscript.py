@@ -7,6 +7,7 @@ import os
 import re
 from urllib.parse import urlparse
 from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Initialize colorama
 colorama.init(autoreset=True)
@@ -54,6 +55,17 @@ def remove_checked_proxies(proxies, valid_file, failed_file):
                 checked_proxies.update(line.strip() for line in f)
     return [proxy for proxy in proxies if proxy not in checked_proxies]
 
+# Function to process each proxy
+def process_proxy(proxy, protocol, url, string_to_find, timeout, valid_proxies, bandwidth_used):
+    if test_proxy(proxy, protocol, url, string_to_find, timeout):
+        with open('Socks4.txt', 'a') as valid_file:
+            valid_file.write(f"{proxy}\n")
+        valid_proxies.append(proxy)
+    else:
+        with open('failed-proxylist.txt', 'a') as failed_file:
+            failed_file.write(f"{proxy}\n")
+    bandwidth_used += len(proxy) * len(url)  # Simplified bandwidth calculation
+
 # Main function
 def main():
     url = "https://ziptasticapi.com/82945"
@@ -75,46 +87,22 @@ def main():
     valid_proxies = []
     bandwidth_used = 0
 
-    # Function to process each proxy
-    def process_proxy(proxy):
-        nonlocal bandwidth_used
-        if test_proxy(proxy, protocol, url, string_to_find, timeout):
-            with open('Socks4.txt', 'a') as valid_file:
-                valid_file.write(f"{proxy}\n")
-            valid_proxies.append(proxy)
-        else:
-            with open('failed-proxylist.txt', 'a') as failed_file:
-                failed_file.write(f"{proxy}\n")
-        bandwidth_used += len(proxy) * len(url)  # Simplified bandwidth calculation
-
-    # Start threads
-    threads_list = []
-    progress = tqdm(total=len(proxies), desc="Checking proxies", unit="proxy")
-    for proxy in proxies:
-        thread = threading.Thread(target=process_proxy, args=(proxy,))
-        threads_list.append(thread)
-        thread.start()
-
-        while len(threading.enumerate()) > threads:
-            time.sleep(0.1)
-
-        progress.update(1)
-
-    # Wait for all threads to finish
-    for thread in threads_list:
-        thread.join()
-
-    progress.close()
+    # Start threads using ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=threads) as executor:
+        futures = [executor.submit(process_proxy, proxy, protocol, url, string_to_find, timeout, valid_proxies, bandwidth_used) for proxy in proxies]
+        
+        progress = tqdm(as_completed(futures), total=len(proxies), desc="Checking proxies", unit="proxy")
+        for future in progress:
+            future.result()
 
     # Display results
     print(f"{Fore.CYAN}\nTotal valid proxies: {len(valid_proxies)}")
     print(f"{Fore.CYAN}Bandwidth used: {bandwidth_used / (1024 * 1024):.2f} MB")
 
-    # Sleep for 3 hours before restarting
-    print(f"{Fore.YELLOW}Sleeping for 3 hours before restarting...")
-    time.sleep(3 * 3600)
+    # Sleep for 20 minutes before restarting
+    print(f"{Fore.YELLOW}Sleeping for 20 min before restarting...")
+    time.sleep(1200)
     main()
 
 if __name__ == "__main__":
     main()
-
