@@ -101,15 +101,14 @@ def main():
 
     # Protocol selection
     protocols = [
-        "connect", "http", "https", "socks4", "socks5", 
-        "socks4 & socks5", "HTTP, HTTPS & SOCKS4 & Socks5"
+        "connect", "http", "https", "socks4", "socks5"
     ]
     print(f"{Fore.CYAN}Select protocol to test for:")
     for i, protocol in enumerate(protocols, 1):
         print(f"{Fore.GREEN}{i}. {protocol}")
     
-    protocol_choice = input(f"{Fore.CYAN}Enter choice [default: 3]: ").strip()
-    protocol_choice = int(protocol_choice) if protocol_choice.isdigit() and 1 <= int(protocol_choice) <= len(protocols) else 3
+    protocol_choice = input(f"{Fore.CYAN}Enter choice [default: 4]: ").strip()
+    protocol_choice = int(protocol_choice) if protocol_choice.isdigit() and 1 <= int(protocol_choice) <= len(protocols) else 4
     protocol = protocols[protocol_choice - 1].split(' ')[0]
 
     # Load proxies from file or URL
