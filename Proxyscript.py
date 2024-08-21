@@ -56,11 +56,11 @@ def remove_checked_proxies(proxies, valid_file, failed_file):
 
 # Main function
 def main():
-    url = "https://example.com"
-    string_to_find = "ExampleString"
+    url = "https://ziptasticapi.com/82945"
+    string_to_find = "SUPERIOR"
     protocol = "socks4"
-    threads = 3
-    timeout = 500
+    threads = 2
+    timeout = 1500
 
     # Load and clean proxies
     proxies = extract_proxies_from_multiple_urls('linkslist.txt')
@@ -117,3 +117,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
